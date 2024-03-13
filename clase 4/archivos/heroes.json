@@ -1,0 +1,14 @@
+[
+     {
+          "id": 1,
+          "heroe": "Iron Man",
+          "nombre": "Tony Stark",
+          "categoria": "Marvel"
+     },
+     {
+          "id": 2,
+          "heroe": "Batman",
+          "nombre": "Bruce Wayne",
+          "categoria": "DC"
+     }
+]
