@@ -5,7 +5,7 @@ const PORT = 3000
 
 const app = express()
 
-const userManager= new UserManager("./src/data.usuarios.json")
+const userManager= new UserManager("./src/data/usuarios.json")
 
 app.get("/usuarios", async (req,res)=> {
     let usuarios = await userManager.leerUsuarios()

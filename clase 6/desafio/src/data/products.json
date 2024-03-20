@@ -1,0 +1,92 @@
+[
+    {
+      "id": 1,
+      "title": "Camiseta Real Madrid Titular 23/24",
+      "description": "Camiseta Real Madrid Titular temporada 2023/24",
+      "price": 80000,
+      "thumbnail": "Sin imagen",
+      "code": "rmad0123",
+      "stock": 25
+    },
+    {
+      "id": 2,
+      "title": "Camiseta Argentina Titular 2024",
+      "description": "Camiseta Argentina AFA Titular Copa América 2024",
+      "price": 80000,
+      "thumbnail": "Sin imagen",
+      "code": "afa0124",
+      "stock": 15
+    },
+    {
+        "id": 3,
+        "title": "Camiseta Argentina Suplente 2024",
+        "description": "Camiseta Argentina AFA Suplente Copa América 2024",
+        "price": 80000,
+        "thumbnail": "Sin imagen",
+        "code": "afa0224",
+        "stock": 15
+      },
+      {
+        "id": 4,
+        "title": "Camiseta Manchester Utd. Titular 23/24",
+        "description": "Camiseta Manchester United Titular temporada 2023/24",
+        "price": 80000,
+        "thumbnail": "Sin imagen",
+        "code": "manu0123",
+        "stock": 15
+      },
+      {
+        "id": 5,
+        "title": "Camiseta Independiente Titular 23/24",
+        "description": "Camiseta Independiente Titular temporada 2023/24",
+        "price": 60000,
+        "thumbnail": "Sin imagen",
+        "code": "cai0123",
+        "stock": 15
+      },
+      {
+        "id": 6,
+        "title": "Camiseta Racing Suplente 23/24",
+        "description": "Camiseta Racing Suplente temporada 2023/24",
+        "price": 60000,
+        "thumbnail": "Sin imagen",
+        "code": "rac0223",
+        "stock": 15
+      },
+      {
+        "id": 7,
+        "title": "Camiseta Liverpool Suplente 23/24",
+        "description": "Camiseta Liverpool Suplente temporada 2023/24",
+        "price": 70000,
+        "thumbnail": "Sin imagen",
+        "code": "liv0223",
+        "stock": 15
+      },
+      {
+        "id": 8,
+        "title": "Camiseta Boca Titular 23/24",
+        "description": "Camiseta Boca Titular temporada 2023/24",
+        "price": 60000,
+        "thumbnail": "Sin imagen",
+        "code": "boca0123",
+        "stock": 15
+      },
+      {
+        "id": 9,
+        "title": "Camiseta River Titular 23/24",
+        "description": "Camiseta River Titular temporada 2023/24",
+        "price": 60000,
+        "thumbnail": "Sin imagen",
+        "code": "carp0123",
+        "stock": 15
+      },
+      {
+        "id": 10,
+        "title": "Camiseta PSG 4ta 22/23",
+        "description": "Camiseta PSG 4ta equipación Jordan temporada 2022/23",
+        "price": 40000,
+        "thumbnail": "Sin imagen",
+        "code": "psg0422",
+        "stock": 15
+      }
+  ]
