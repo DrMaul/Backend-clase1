@@ -29,4 +29,15 @@ class Heroe {
     }
 }
 
-module.exports = {Heroe, f1, f2, usuarios}
+export default class Villano {
+    constructor(nom, alias){
+        this.nombre = nom,
+        this.alias = alias
+    }
+
+    verIdentidad(){
+        return `${this.nombre} es: ${this.alias}`
+    }
+}
+
+export {Heroe, f1, f2, usuarios}

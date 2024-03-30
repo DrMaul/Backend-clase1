@@ -1,4 +1,5 @@
-class Persona {
+//Exportar una sola cosa desde un archivo
+export default class Persona {
     constructor(nombre, apellido){
         this.nombre = nombre,
         this.apellido = apellido
@@ -12,5 +13,4 @@ class Persona {
         return `${this.nombre} ${this.apellido} dice: HOLA`
     }
 }
-//Exportar una sola cosa desde un archivo
-module.exports = Persona
+
