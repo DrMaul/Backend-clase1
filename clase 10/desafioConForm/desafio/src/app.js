@@ -5,6 +5,7 @@ const {router: productsRouter} = require('./routes/products.router')
 const cartsRouter = require('./routes/carts.router')
 const {router: vistasRouter} = require("./routes/vistas.router")
 const {Server} = require("socket.io")
+const bodyParser = require("body-parser");
 
 const PORT = 8080
 const app = express()
@@ -20,7 +21,7 @@ app.use(express.urlencoded({extended: true}))
 
 app.use(express.static(path.join(__dirname,'/public')))
 
-app.use('/api/products', (req,res,next)=>{
+app.use('/api/products',bodyParser.json(), (req,res,next)=>{
     req.io = io
 
     next()

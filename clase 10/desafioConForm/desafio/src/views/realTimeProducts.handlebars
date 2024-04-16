@@ -1,0 +1,30 @@
+<h2>Productos</h2>
+<hr>
+<h3>Listado de Productos</h3>
+<ul id="productos">    
+    {{#each products}}
+        <li>{{title}}</li>
+    {{/each}}
+
+</ul>
+
+<br>
+<h2>Agregar un producto</h2>
+<form action="/api/products" method="post">
+        <input type="text" name="title" placeholder="Ingresar titulo (string)">
+        <input type="text" name="description" placeholder="Ingresar descripcion (string)">
+        <input type="text" name="code" placeholder="Ingresar código (string)">
+        <input type="number" name="price" placeholder="Ingresar precio (number)">
+        <input type="number" name="stock" placeholder="Ingresar stock (number)">
+        <input type="text" name="category" placeholder="Ingresar categoria (string)">
+        <input type="text" name="thumbnail" placeholder="Ingresar imagen (string)">
+
+        <br>
+        <input type="submit" value="enviar">
+</form>
+
+<br><br>
+<a href="/">Home Page</a>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProducts.js"></script>

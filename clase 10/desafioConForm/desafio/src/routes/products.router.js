@@ -57,6 +57,17 @@ router.get("/:pid", async (req, res)=>{
 router.post('/',async (req,res)=>{
     let {title, description, code, price, status, stock, category, thumbnail} = req.body
 
+    console.log(title)
+    console.log(req.body)
+
+    price = Number(price)
+    stock = Number(stock)
+    thumbnail = "Sin imagen"
+
+    if(isNaN(price) && isNaN(stock)){
+        return res.json({error:" Ingresar precio y stock como valor numerico"})
+    }
+
     //Se validan que todos los campos sean obligatorios
     if(!title || !description || !code || !price || !stock || !category){
         res.setHeader('Content-type', 'application/json')
