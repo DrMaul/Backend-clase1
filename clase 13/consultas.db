@@ -1,0 +1,75 @@
+# Mostrar Base de Datos
+show dbs
+
+# Moverse a la Base de Datos
+use <nombre>
+use coderClase13
+
+# Eliminar base de datos
+db.dropDatabase()
+
+# Mostrar colecciones existentes
+show collections
+
+# Insertar datos, insertar documento en coleccion
+db.alumnos.insertOne({nombre: "Juan", apellido: "Perez"})
+
+# Eliminar coleccion
+db.mascotas.drop()
+
+# Insertar varios datos a la vez
+db.mascotas.insertMany([
+    {
+        nombre:"Pipo",
+        especie:"Perro",
+        edad: 13
+    },
+    {
+        nombre:"Cochi",
+        especie:"Gato",
+        edad: 4
+    },
+    {
+        nombre:"Lolo",
+        especie:"Perro",
+        edad:7
+    },
+    {
+        nombre:"Momo",
+        especie:"Gato",
+        edad: 2
+    },
+    {
+        nombre:"Cristian",
+        especie:"Gato",
+        edad: 1
+    },
+    {
+        nombre:"Manuel",
+        especie:"Perro",
+        edad: 10
+    }
+])
+
+# Obtener datos del documento
+db.mascotas.find()
+
+# Recuperar cantidad de registros
+db.mascotas.estimatedDocumentCount()
+db.mascotas.countDocuments()
+db.mascotas.find().count()
+
+# Buscar
+db.mascotas.find({nombre: "Manuel"})
+db.mascotas.find({nombre: "Manuel", especie: "Perro"})
+db.mascotas.find({especie: "Perro"})
+db.mascotas.find({especie: "Gato"}).count()
+
+# Filtros
+db.mascotas.find({edad: {$gt:5}})
+db.mascotas.find({$or:[{edad:{$lt:5}},{edad:{$gt:10}}]})
+db.mascotas.find({nombre:{$in:["Lolo", "Momo"]}})
+
+# Busqueda avanzada
+db.mascotas.distinct("especie")
+db.mascotas.find({nombre:/Ma/i})
