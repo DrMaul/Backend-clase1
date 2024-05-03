@@ -46,14 +46,14 @@ io.on("connection", socket=>{
         usuarios.push({id:socket.id, nombre})
         let mensajes=await messagesModelo.find().lean()
         mensajes=mensajes.map(m=>{
-            return {user: m.user, message: m.message}
+            return {nombre: m.user, mensaje: m.message}
         })
         socket.emit("mensajesPrevios", mensajes)
         socket.broadcast.emit("nuevoUsuario", nombre)
     })
 
     socket.on("mensaje", async(nombre, mensaje)=>{
-        await messagesModelo.create({email:nombre, mensaje})
+        await messagesModelo.create({user:nombre, message: mensaje})
         io.emit("nuevoMensaje", nombre, mensaje)
     })
 
