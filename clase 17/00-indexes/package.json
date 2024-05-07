@@ -1,0 +1,16 @@
+{
+  "name": "00-indexes",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "9901-crea-bigUsers.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongoose": "^8.3.4"
+  }
+}
