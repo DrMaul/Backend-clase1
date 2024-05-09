@@ -115,16 +115,23 @@ router.post('/:cid/product/:pid', async (req, res) => {
 
     
     console.log("Validaciones exitosas, vamos a agregar el producto")
-    //cart.products && cart.products.length > 0 ? cart.products.find(p => p.product == pid) : null;
+
     let cart = await cartManager.getCartBy({_id:cid})
     console.log(cart)
     if (cart){
-        let productExist = cart.products.find(p => p.product== pid)
-        if(productExist){   
-            productExist.quantity = productExist.quantity+1
-        }
-        else{
-            cart.products.push({product: pid, quantity: 1})
+
+        if (Array.isArray(cart.products)) { // Verifica si cart.products es un array
+            let productExist = cart.products.find(p => p.product == pid);
+            if (productExist) {   
+                productExist.quantity += 1; // Incrementa la cantidad si el producto existe
+            } else {
+                cart.products.push({product: pid, quantity: 1}); // Agrega el producto al carrito si no existe
+            }
+        } else {
+            console.log("El campo products no es un array en el carrito")
+            // Si cart.products no es un array, manejar el error adecuadamente
+            res.setHeader('Content-Type', 'application/json');
+            return res.status(400).json({error: 'El campo products no es un array en el carrito'});
         }
     }
     else {
@@ -182,3 +189,169 @@ router.delete("/:cid", async (req,res)=> {
 
 })
 
+router.delete('/:cid/product/:pid', async (req, res) => {
+    let { cid, pid } = req.params;
+
+    if(!isValidObjectId(cid) || !isValidObjectId(pid)){
+        res.setHeader('Content-Type','application/json');
+        return res.status(400).json({error:`Ingresar ID valido de MongoDB`})
+    }
+
+    //Valido si existe el producto en la BBDD
+    try {
+        let product = await productManager.getProductBy({_id:pid})
+        if(!product){
+        res.setHeader('Content-Type','application/json');
+        return res.status(400).json({error:`El producto con id: ${pid} no existe`})
+    }
+    } catch (error) {
+        res.setHeader('Content-Type','application/json');
+        return res.status(500).json(
+            {
+                error:`Error inesperado en el servidor - Intente más tarde, o contacte a su administrador`,
+                detalle:`${error.message}`
+            }
+        )
+    }
+
+    //Valido si existe el carrito en la BBDD
+    try {
+        let cart = await cartManager.getCartBy({_id:cid})
+        if(!cart){
+        res.setHeader('Content-Type','application/json');
+        return res.status(400).json({error:`El carrito con id: ${cid} no existe`})
+    }
+    } catch (error) {
+        res.setHeader('Content-Type','application/json');
+        return res.status(500).json(
+            {
+                error:`Error inesperado en el servidor - Intente más tarde, o contacte a su administrador`,
+                detalle:`${error.message}`
+            }
+        )
+    }
+
+    try {
+        let prodDeleted = await cartManager.deleteProductInCart(cid, pid)
+        if(prodDeleted){
+            res.setHeader('Content-Type','application/json');
+            return res.status(200).json({payload:`Producto ${pid} eliminado del carrito ${cid}`});
+        }
+ 
+    } catch (error) {
+        res.setHeader('Content-Type','application/json');
+        return res.status(500).json(
+            {
+                error:`Error inesperado en el servidor - Intente más tarde, o contacte a su administrador`,
+                detalle:`${error.message}`
+            }
+        )
+        
+    }
+
+    
+})
+
+router.put("/:cid", async (req,res)=> {
+    let id = req.params.cid
+
+    if(!isValidObjectId(id)){
+        res.setHeader('Content-Type','application/json');
+        return res.status(400).json({error:`Ingresar ID valido de MongoDB`})
+    }
+
+    let aModificar = req.body
+    if (aModificar._id){
+        delete aModificar._id
+    }
+
+    let cart
+    try {
+        cart = await cartManager.getCartBy({_id:cid})
+        if(!cart){
+        res.setHeader('Content-Type','application/json');
+        return res.status(400).json({error:`El carrito con id: ${cid} no existe`})
+    }
+    } catch (error) {
+        res.setHeader('Content-Type','application/json');
+        return res.status(500).json(
+            {
+                error:`Error inesperado en el servidor - Intente más tarde, o contacte a su administrador`,
+                detalle:`${error.message}`
+            }
+        )
+    }
+    
+
+    try{
+        let cartModificado = await cartManager.updateCart(id, aModificar)
+        res.setHeader('Content-type', 'application/json')
+        return res.status(200).json(cartModificado)
+    }catch (error) {
+        res.setHeader('Content-type', 'application/json')
+        return res.status(500).json(
+            {
+                error:`Error inesperado, intente nuevamente`,
+                detalle: `${error.message}`
+            })
+    }
+})
+
+router.put("/:cid/product/:pid", async (req,res)=> {
+    let { cid, pid } = req.params;
+
+    if(!isValidObjectId(cid) || !isValidObjectId(pid)){
+        res.setHeader('Content-Type','application/json');
+        return res.status(400).json({error:`Ingresar ID valido de MongoDB`})
+    }
+
+    let {aModificar} = req.body
+    
+    //Valido si existe el producto en la BBDD
+    try {
+        let product = await productManager.getProductBy({_id:pid})
+        if(!product){
+        res.setHeader('Content-Type','application/json');
+        return res.status(400).json({error:`El producto con id: ${pid} no existe`})
+    }
+    } catch (error) {
+        res.setHeader('Content-Type','application/json');
+        return res.status(500).json(
+            {
+                error:`Error inesperado en el servidor - Intente más tarde, o contacte a su administrador`,
+                detalle:`${error.message}`
+            }
+        )
+    }
+
+    let cart
+    try {
+        cart = await cartManager.getCartBy({_id:cid})
+        if(!cart){
+        res.setHeader('Content-Type','application/json');
+        return res.status(400).json({error:`El carrito con id: ${cid} no existe`})
+    }
+    } catch (error) {
+        res.setHeader('Content-Type','application/json');
+        return res.status(500).json(
+            {
+                error:`Error inesperado en el servidor - Intente más tarde, o contacte a su administrador`,
+                detalle:`${error.message}`
+            }
+        )
+    }
+    
+
+    try{
+        let prodEnCartModificado = await cartManager.updateProdInCart(cid,pid, aModificar)
+        res.setHeader('Content-type', 'application/json')
+        return res.status(200).json(prodEnCartModificado)
+    }catch (error) {
+        res.setHeader('Content-type', 'application/json')
+        return res.status(500).json(
+            {
+                error:`Error inesperado, intente nuevamente`,
+                detalle: `${error.message}`
+            })
+    }
+})

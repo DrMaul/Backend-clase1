@@ -10,6 +10,20 @@
     {{/each}}
 
 </ul>
+<br><br>
+<a href="/products?pagina=1">Pag. 1</a>
+{{#if hasPrevPage}}
+    <a href="/products?pagina={{prevPage}}">Anterior</a>
+{{/if}}
+
+{{#if hasNextPage}}
+    <a href="/products?pagina={{nextPage}}">Siguiente</a>
+{{/if}}
+
+<a href="/products?pagina={{totalPages}}">Ult. pag</a>
+
+<br>
+
 
 <br><br>
 <a href="/carts/{{cart._id}}">Ver carrito</a>
@@ -19,3 +33,5 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/realTimeProducts.js"></script>
 <script src="/js/setCart.js"></script>
+
+

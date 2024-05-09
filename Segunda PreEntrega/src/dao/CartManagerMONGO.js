@@ -19,7 +19,7 @@ export class CartManagerMONGO {
     }
 
     async createCart() {
-        return await cartsModelo.create({products: []})
+        return await cartsModelo.create({products:[]})
     }
 
     /* async addProductToCart(cartId, cart) {
@@ -35,5 +35,23 @@ export class CartManagerMONGO {
         return await cartsModelo.deleteOne({_id:cartId})
     }
 
+    async deleteProductInCart(cartId, prodId){
+        return await cartsModelo.updateOne(
+            { _id: mongoose.Types.ObjectId(cartId) },
+            { $pull: { products: { product: mongoose.Types.ObjectId(prodId) } } }
+          );
+    }
+
+    async updateCart(idCart, cart){
+        return await productsModelo.findByIdAndUpdate(idCart, cart, {runValidators: true, returnDocument: "after"})
+        
+    }
+
+    async updateProdInCart(idCart, prodId,  newQuantity){
+        return await cartsModelo.updateOne(
+            { _id: mongoose.Types.ObjectId(idCart), 'products.product': mongoose.Types.ObjectId(prodId) },
+            { $set: { 'products.$.quantity': newQuantity } }
+          );
+    }
     
 }

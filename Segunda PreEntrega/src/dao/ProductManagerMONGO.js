@@ -6,6 +6,10 @@ export class ProductManagerMONGO {
         return await productsModelo.find().lean()
     }
 
+    async getProductsPaginate(page=1){
+        return await productsModelo.paginate({}, {limit:5, page, lean:true})
+    }
+
     async getProductBy(filtro={}){
         return await productsModelo.findOne(filtro).lean()
     }
@@ -22,6 +26,8 @@ export class ProductManagerMONGO {
     async deleteProduct(idProd){
         return await productsModelo.deleteOne({_id:idProd})
     }
+
+
 }
 
 

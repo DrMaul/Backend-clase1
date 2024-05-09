@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import paginate from 'mongoose-paginate-v2'
 
 export const productosModelo = mongoose.model(
     "productos",

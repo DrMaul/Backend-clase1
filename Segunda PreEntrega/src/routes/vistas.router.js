@@ -35,6 +35,12 @@ router.get("/carts/:cid", async (req, res)=> {
 router.get('/products', async (req,res)=> {
     console.log("Estamos en /products")
 
+    let {pagina} =req.query
+    if(!pagina) pagina = 1
+
+    let {docs:products, page, totalPages, hasPrevPage, hasNextPage, prevPage, nextPage}= await productManager.getProductsPaginate(pagina)
+
+
     let cart
     try {
         cart = await cartManager.getCartByPopulate()
@@ -56,22 +62,9 @@ router.get('/products', async (req,res)=> {
     console.log(cart)
     console.log(cart._id)
 
-    let products
-    try {
-        products = await productManager.getProducts()
-        
-    } catch (error) {
-        console.log(error)
-        res.setHeader('Content-Type','application/json');
-        return res.status(500).json(
-            {
-                error:`Error inesperado en el servidor, intente más tarde`
-            }
-        )
-        
-    }
+    
     res.setHeader('Content-type', 'text/html')
-    res.status(200).render('realTimeProducts', {products, cart})
+    res.status(200).render('realTimeProducts', {products, cart , page, totalPages, hasPrevPage, hasNextPage, prevPage, nextPage})
 })
 
 router.get('/chat', (req, res)=> {
