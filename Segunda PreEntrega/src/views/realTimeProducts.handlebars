@@ -1,0 +1,21 @@
+<h2>Productos</h2>
+<hr>
+<h3>Listado de Productos</h3>
+<input type="text" value="{{cart._id}}" id="cart">
+<ul id="productos">    
+    {{#each products}}
+        <li>
+            <strong>{{title}}</strong> - precio: ${{price}} <button onclick="addProduct('{{_id}}')">Agregar al carrito</button>
+        </li>
+    {{/each}}
+
+</ul>
+
+<br><br>
+<a href="/carts/{{cart._id}}">Ver carrito</a>
+<br><br>
+<a href="/">Home Page</a>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProducts.js"></script>
+<script src="/js/setCart.js"></script>
