@@ -43,7 +43,7 @@ export class CartManagerMONGO {
     }
 
     async updateCart(idCart, cart){
-        return await productsModelo.findByIdAndUpdate(idCart, cart, {runValidators: true, returnDocument: "after"})
+        return await cartsModelo.findByIdAndUpdate(idCart, cart, {runValidators: true, returnDocument: "after"})
         
     }
 
