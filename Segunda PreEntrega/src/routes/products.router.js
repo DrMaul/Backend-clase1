@@ -88,7 +88,7 @@ router.post('/',async (req,res)=>{
     //Valido si ya existe el producto en la BBDD
     let existe
     try {
-        existe = await productManager.getProductsBy({code})
+        existe = await productManager.getProductBy({code})
     } catch (error) {
         res.setHeader('Content-Type','application/json');
         return res.status(500).json(

@@ -1,16 +1,35 @@
 <h2>Productos</h2>
 <hr>
 <h3>Listado de Productos</h3>
+<h4>Categoría</h4>
+<ul>
+    <li><a href="/products">Todos</a></li>
+    {{#each categories}}
+        <li><a href="/products?category={{this}}">{{this}}</a></li>
+    {{/each}}
+</ul>
 <input type="text" value="{{cart._id}}" id="cart">
+<br><br>
+<div>
+    <select id="orderBy">
+        <option selected disabled>Ordenar por</option>
+        <option value="asc">Menor precio</option>
+        <option value="desc">Mayor precio</option>
+    </select>
+</div>
+<br><br>
+
 <ul id="productos">    
-    {{#each products}}
+    {{#each payload}}
         <li>
             <strong>{{title}}</strong> - precio: ${{price}} <button onclick="addProduct('{{_id}}')">Agregar al carrito</button>
         </li>
+        <br>
     {{/each}}
 
 </ul>
 <br><br>
+
 <a href="/products?pagina=1">Pag. 1</a>
 {{#if hasPrevPage}}
     <a href="/products?pagina={{prevPage}}">Anterior</a>
@@ -22,10 +41,8 @@
 
 <a href="/products?pagina={{totalPages}}">Ult. pag</a>
 
-<br>
+<br><br><br>
 
-
-<br><br>
 <a href="/carts/{{cart._id}}">Ver carrito</a>
 <br><br>
 <a href="/">Home Page</a>
@@ -33,5 +50,6 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/realTimeProducts.js"></script>
 <script src="/js/setCart.js"></script>
+<script src="/js/sortProducts.js"></script>
 
 
