@@ -1,4 +1,5 @@
 import {cartsModelo} from "./models/carts.modelo.js"
+import mongoose from "mongoose"
 
 export class CartManagerMONGO {
 
@@ -7,16 +8,16 @@ export class CartManagerMONGO {
     }
 
     async getCartBy(filtro={}){
-        return await cartsModelo.find(filtro).lean()
-    }
-
-    async getCartById(idCart){
-        return await cartsModelo.findOne(idCart).lean()
+        return await cartsModelo.findOne(filtro).lean()
     }
 
     async getCartByPopulate(filtro={}){
         return await cartsModelo.findOne(filtro).populate("products.product").lean()
     }
+
+    async getCartById(idCart){
+            return await cartsModelo.findOne(idCart).lean()
+        }
 
     async createCart() {
         return await cartsModelo.create({products:[]})
@@ -37,21 +38,22 @@ export class CartManagerMONGO {
 
     async deleteProductInCart(cartId, prodId){
         return await cartsModelo.updateOne(
-            { _id: mongoose.Types.ObjectId(cartId) },
-            { $pull: { products: { product: mongoose.Types.ObjectId(prodId) } } }
+            { _id: cartId },
+            { $pull: { products: { product: prodId } } }
           );
     }
 
-    async updateCart(idCart, cart){
-        return await cartsModelo.findByIdAndUpdate(idCart, cart, {runValidators: true, returnDocument: "after"})
+    async updateCart(idCart, products){
+        return await cartsModelo.findByIdAndUpdate(idCart, {$set: {products: products}}, {runValidators: true, returnDocument: "after"})
         
     }
 
     async updateProdInCart(idCart, prodId,  newQuantity){
-        return await cartsModelo.updateOne(
-            { _id: mongoose.Types.ObjectId(idCart), 'products.product': mongoose.Types.ObjectId(prodId) },
-            { $set: { 'products.$.quantity': newQuantity } }
-          );
+        return await cartsModelo.findOneAndUpdate(
+            { _id: idCart, 'products.product':prodId },
+            { $set: { 'products.$.quantity': newQuantity }},
+            {new: true}
+          ).populate("products.product");
     }
     
 }

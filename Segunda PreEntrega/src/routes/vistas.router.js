@@ -18,6 +18,11 @@ router.get("/carts/:cid", async (req, res)=> {
     let cart 
     try {
         cart = await cartManager.getCartByPopulate({_id:cid})
+        if(!cart){
+            res.setHeader('Content-Type','application/json');
+            return res.status(400).json({error:`Error al mostrar el carrito`})
+        }
+
     } catch (error) {
         console.log(error)
         res.setHeader('Content-Type','application/json');

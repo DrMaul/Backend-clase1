@@ -80,21 +80,17 @@ router.get("/:cid", async (req, res)=>{
 
     res.setHeader('Content-type', 'application/json')
     return res.status(200).json(cart)
+
     
 })
 
 router.post('/:cid/product/:pid', async (req, res) => {
     let { cid, pid } = req.params;
 
-    console.log("Carrito obtenido: ",cid)
-    console.log("Producto obtenido: ",pid)
-
     if(!isValidObjectId(cid) || !isValidObjectId(pid)){
         res.setHeader('Content-Type','application/json');
         return res.status(400).json({error:`Ingresar ID valido de MongoDB`})
     }
-
-    console.log("Se agregará un nuevo producto")
 
     //Valido si existe el producto en la BBDD
     try {
@@ -113,33 +109,20 @@ router.post('/:cid/product/:pid', async (req, res) => {
         )
     }
 
-    
-    console.log("Validaciones exitosas, vamos a agregar el producto")
-
-    let cart = await cartManager.getCartBy({_id:cid})
-    console.log(cart)
-    if (cart){
-
-        if (Array.isArray(cart.products)) { // Verifica si cart.products es un array
+    try {
+        let cart = await cartManager.getCartBy({_id:cid})
+  
+        if (cart){
             let productExist = cart.products.find(p => p.product == pid);
             if (productExist) {   
-                productExist.quantity += 1; // Incrementa la cantidad si el producto existe
+                productExist.quantity += 1; 
             } else {
-                cart.products.push({product: pid, quantity: 1}); // Agrega el producto al carrito si no existe
-            }
-        } else {
-            console.log("El campo products no es un array en el carrito")
-            // Si cart.products no es un array, manejar el error adecuadamente
-            res.setHeader('Content-Type', 'application/json');
-            return res.status(400).json({error: 'El campo products no es un array en el carrito'});
+                cart.products.push({product: pid, quantity: 1}); 
+            }   
         }
-    }
-    else {
-    res.setHeader('Content-Type','application/json');
-    return res.status(400).json({error:`Carrito con id:${cid} no encontrado`})}
-
-    try {
-        
+        else {
+        res.setHeader('Content-Type','application/json');
+        return res.status(400).json({error:`Carrito con id:${cid} no encontrado`})}
 
         let productoAgregado = await cartManager.addProductToCart(cid, cart);
 
@@ -163,11 +146,8 @@ router.delete("/:cid", async (req,res)=> {
         return res.status(400).json({error:`Ingresar ID valido de MongoDB`})
     }
 
-    let cartEliminado
-    let carts
     try{
-        carts = await cartManager.getCarts()
-        cartEliminado = await cartManager.deleteCart(id)
+        let cartEliminado = await cartManager.deleteCart(id)
         if(cartEliminado.deletedCount > 0){
             res.setHeader('Content-Type','application/json');
             return res.status(200).json({payload:`Carrito con id: ${id} eliminado`});
@@ -253,25 +233,30 @@ router.delete('/:cid/product/:pid', async (req, res) => {
 })
 
 router.put("/:cid", async (req,res)=> {
-    let id = req.params.cid
+    let cid = req.params.cid
+    let products = req.body
 
-    if(!isValidObjectId(id)){
+    if(!isValidObjectId(cid)){
         res.setHeader('Content-Type','application/json');
         return res.status(400).json({error:`Ingresar ID valido de MongoDB`})
     }
 
-    let aModificar = req.body
-    if (aModificar._id){
-        delete aModificar._id
-    }
-
-    let cart
     try {
-        cart = await cartManager.getCartBy({_id:cid})
-        if(!cart){
-        res.setHeader('Content-Type','application/json');
-        return res.status(400).json({error:`El carrito con id: ${cid} no existe`})
-    }
+        let cart = await cartManager.getCartBy({_id:cid})
+        if(cart){
+            let cartModificado = await cartManager.updateCart(cid, products)
+            if(cartModificado){
+                res.setHeader('Content-type', 'application/json')
+                return res.status(200).json({cartModificado}) 
+            }else{
+                res.setHeader('Content-Type','application/json');
+                return res.status(400).json({error:`Error al modificar`})
+            }
+            
+        }else{
+            res.setHeader('Content-Type','application/json');
+            return res.status(400).json({error:`El carrito con id: ${cid} no existe`})
+        }
     } catch (error) {
         res.setHeader('Content-Type','application/json');
         return res.status(500).json(
@@ -281,31 +266,17 @@ router.put("/:cid", async (req,res)=> {
             }
         )
     }
-    
 
-    try{
-        let cartModificado = await cartManager.updateCart(id, aModificar)
-        res.setHeader('Content-type', 'application/json')
-        return res.status(200).json(cartModificado)
-    }catch (error) {
-        res.setHeader('Content-type', 'application/json')
-        return res.status(500).json(
-            {
-                error:`Error inesperado, intente nuevamente`,
-                detalle: `${error.message}`
-            })
-    }
 })
 
 router.put("/:cid/product/:pid", async (req,res)=> {
     let { cid, pid } = req.params;
+    let {quantity} = req.body
 
     if(!isValidObjectId(cid) || !isValidObjectId(pid)){
         res.setHeader('Content-Type','application/json');
         return res.status(400).json({error:`Ingresar ID valido de MongoDB`})
     }
-
-    let {aModificar} = req.body
     
     //Valido si existe el producto en la BBDD
     try {
@@ -324,13 +295,22 @@ router.put("/:cid/product/:pid", async (req,res)=> {
         )
     }
 
-    let cart
     try {
-        cart = await cartManager.getCartBy({_id:cid})
-        if(!cart){
-        res.setHeader('Content-Type','application/json');
-        return res.status(400).json({error:`El carrito con id: ${cid} no existe`})
-    }
+        let cart = await cartManager.getCartBy({_id:cid})
+        if(cart){
+            let prodEnCartModificado = await cartManager.updateProdInCart(cid,pid, quantity)
+            if(prodEnCartModificado){
+                res.setHeader('Content-type', 'application/json')
+                return res.status(200).json({prodEnCartModificado})
+            }else{
+                res.setHeader('Content-Type','application/json');
+                return res.status(400).json({error:`Error al modificar`})
+            }
+            
+        }else {
+            res.setHeader('Content-Type','application/json');
+            return res.status(400).json({error:`El carrito con id: ${cid} no existe`})
+        }
     } catch (error) {
         res.setHeader('Content-Type','application/json');
         return res.status(500).json(
@@ -342,16 +322,4 @@ router.put("/:cid/product/:pid", async (req,res)=> {
     }
     
 
-    try{
-        let prodEnCartModificado = await cartManager.updateProdInCart(cid,pid, aModificar)
-        res.setHeader('Content-type', 'application/json')
-        return res.status(200).json(prodEnCartModificado)
-    }catch (error) {
-        res.setHeader('Content-type', 'application/json')
-        return res.status(500).json(
-            {
-                error:`Error inesperado, intente nuevamente`,
-                detalle: `${error.message}`
-            })
-    }
 })
