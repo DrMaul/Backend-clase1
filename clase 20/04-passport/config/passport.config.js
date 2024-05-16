@@ -1,0 +1,57 @@
+import passport from 'passport'
+import local from 'passport-local'
+import { UsuariosManagerMongo as UsuariosManager } from '../src/dao/UsuariosManagerMONGO.js'
+import { generaHash } from '../src/utils.js'
+
+const usuariosManager = new UsuariosManager()
+//paso 1
+export const initPassport =()=>{
+
+    passport.use(
+        "registro",
+        new local.Strategy(
+            {
+                usernameField:"email",
+                passReqToCallback: true
+            },
+            async(req, username, password, done)=> {
+                try {
+                    let {nombre} = req.body
+
+                    if(!nombre){
+                        /* res.setHeader('Content-Type','application/json');
+                        return res.status(400).json({error:`Complete datos de registro`}) */
+                        return done(null, false)
+                    }
+
+                    let existe = await usuariosManager.getBy({email:username})
+                    if(existe){
+                        /* res.setHeader('Content-Type','application/json');
+                        return res.status(400).json({error:`Ya existe email`}) */
+                        return done(null, false)
+                    }
+                    password = generaHash(password)
+
+                    
+                    let nuevoUsuario = await usuariosManager.create({nombre, email:username, password, rol:"user"})
+                    /* res.setHeader('Content-Type','application/json');
+                    return res.status(200).json({message:"Registro correcto", nuevoUsuario}); */
+                    return done (null, nuevoUsuario)
+                   
+                } catch (error) {
+                    return done(error)
+                }
+            }
+        )
+    )
+    
+    //paso 1 bis, solo si usamos SESSIOONS, configuro serializar/deserailizar
+    passport.serializeUser((usuario, done)=>{
+        return done(null, usuario._id)
+    })
+
+    passport.deserializeUser(async (id,done)=>{
+        let usuario = await usuariosManager.getBy({_id:id})
+        return done(null, usuario)
+    })
+}
