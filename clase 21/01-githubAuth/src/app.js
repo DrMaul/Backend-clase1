@@ -5,6 +5,8 @@ import { engine } from 'express-handlebars';
 import mongoose from 'mongoose';
 import sessions from 'express-session'
 import passport from 'passport'
+import connectMongo from 'connect-mongo'
+
 import { initPassport } from '../config/passport.config.js';
 
 import { router as vistasRouter } from './routes/vistas.router.js';
@@ -18,7 +20,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, './public')));
 app.use(sessions({
-    secret:"CoderCoder123", resave:true, saveUninitalized:true
+    secret:"CoderCoder123",
+    resave:true, 
+    saveUninitalized:true,
+    store: connectMongo.create({
+        mongoUrl: "mongodb+srv://agusfmartinez:CoderCoder@cluster0.zvgrerx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&dbName=clase21",
+        ttl:3600
+    })
 }))
 
 //paso 2
@@ -39,9 +47,7 @@ const server = app.listen(PORT, () => {
 
 const connDB=async()=>{
     try {
-        await mongoose.connect("mongodb+srv://agusfmartinez:CoderCoder@cluster0.zvgrerx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",{
-            dbName:"clase20"
-            })
+        await mongoose.connect("mongodb+srv://agusfmartinez:CoderCoder@cluster0.zvgrerx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&dbName=clase21")
         console.log(`Conexión a DB establecida`)
 
     } catch (error) {

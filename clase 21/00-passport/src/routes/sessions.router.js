@@ -18,6 +18,7 @@ router.get("/error", (req,res)=>{
     
 }) 
 
+//paso 3
 router.post('/registro',passport.authenticate("registro",{failureRedirect:"/api/sessions/error"}),async(req,res)=>{
 
     /* let {nombre, email, password} = req.body
@@ -56,23 +57,24 @@ router.post('/registro',passport.authenticate("registro",{failureRedirect:"/api/
 })
 
 router.post('/login', async (req,res)=> {
-    let {email, password, web} = req.body
+    //let {email, password, web} = req.body
+    let {web} = req.body
 
-    if(!email || !password){
+    /* if(!email || !password){
         if(web){
             return res.redirect(`/login/?error=Complete datos de login`)
         }else{
             res.setHeader('Content-Type','application/json');
             return res.status(400).json({error:`Complete datos de login`})
         }
-    }
+    } */
 
     //otras validaciones
     //para el desafio, preguntar por admincoder@coder.com y contraseña admincod3r123
     //sin son esos datos, devolves nombre "admin", email y rol "admin"
 
     // let usuario = await usuariosManager.getBy({email, password:generaHash(password)})
-    let usuario = await usuariosManager.getBy({email})
+    /* let usuario = await usuariosManager.getBy({email})
     if(!usuario){
         if(web){
             return res.redirect(`/login/?error=Credenciales invalidas`)
@@ -90,9 +92,9 @@ router.post('/login', async (req,res)=> {
             res.setHeader('Content-Type','application/json');
             return res.status(400).json({error:`Credenciales invalidas`})
         }
-    }
+    } */
 
-    usuario = {...usuario}
+    usuario = {...req.user}
     delete usuario.password
     req.session.usuario = usuario
 
