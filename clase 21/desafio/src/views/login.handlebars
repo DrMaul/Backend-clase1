@@ -1,6 +1,6 @@
 <h2>Login:</h2>
 <hr>
-<form action="/api/sessions/login" method="post">
+<form onsubmit="login(event)" id="formLogin" action="/api/sessions/login" method="post">
 
     {{#if error}}
         <div style="font-weight: bolder; color: red;">{{error}}</div>
@@ -16,5 +16,9 @@
     <br><br>
     <input type="submit" value="Login">
 </form>
+<br>
+<a href="/api/sessions/github">Acceder con Github</a>
 <br><br>
 {{>menu}}
+
+<script src="js/login.js"></script>

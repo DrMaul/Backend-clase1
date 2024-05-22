@@ -7,6 +7,8 @@ import mongoose from 'mongoose';
 import {engine} from "express-handlebars"
 import sessions from 'express-session'
 import MongoStore from 'connect-mongo'
+import { initPassport } from './config/passport.config.js';
+import passport from 'passport';
 
 import { router as productsRouter} from './routes/products.router.js';
 import {router as cartsRouter} from './routes/carts.router.js'
@@ -34,6 +36,11 @@ app.use(sessions({
         mongoUrl: mongourl
     })
 }))
+
+//paso 2
+initPassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.engine('handlebars', engine())
 app.set('view engine', 'handlebars')
