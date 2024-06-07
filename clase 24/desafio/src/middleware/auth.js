@@ -15,16 +15,18 @@ export const auth = (permisos=[])=> {
 
         permisos = permisos.map(p=>p.toLowerCase())
 
+        console.log("Permisos: ", permisos)
+
         if(permisos.includes("public")){
             return next()
         }
 
-        if(!req.session.user?.rol){
+        if(!req.session.usuario?.rol){
             return res.status(401).json({error:"No existen usuarios autenticados, o hay problemas con el rol"})
 
         }
 
-        if(!permisos.includes(req.session.user.rol.toLowerCase())){
+        if(!permisos.includes(req.session.usuario.rol.toLowerCase())){
             return res.status(403).json({error:"No tiene privilegios suficientes para acceder"})
         }
 
