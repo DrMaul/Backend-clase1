@@ -2,7 +2,9 @@ import express from 'express';
 import mongoose from 'mongoose'
 import { router as usuariosRouter } from './routes/usuariosRouter.js';
 import { router as juguetesRouter } from './routes/juguetesRouter.js';
-const PORT=3000;
+import { config } from './config/config.js';
+// const PORT=3000;
+const PORT=config.PORT;
 
 const app=express();
 
