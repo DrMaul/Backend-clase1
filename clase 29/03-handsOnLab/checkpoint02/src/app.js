@@ -13,8 +13,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 app.use('/api/usuarios',usuariosRouter )
-app.use('/api/usuarios',negociosRouter )
-app.use('/api/usuarios',ordenesRouter )
+app.use('/api/negocios',negociosRouter )
+app.use('/api/ordenes',ordenesRouter )
 
 const server=app.listen(PORT,()=>{
     console.log(`Server escuchando en puerto ${PORT}`);
@@ -28,3 +28,5 @@ const connDB = async()=>{
          console.log(`Error al conectar a la DB error`)
     }
 }
+
+connDB()

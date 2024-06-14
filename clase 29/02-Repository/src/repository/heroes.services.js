@@ -1,3 +1,4 @@
+import { MemoryHeroesDAO } from "../dao/memoryHeroesDAO.js"
 import { HeroesDTO } from "../dto/heroesDTO.js"
 
 class HeroesService{
