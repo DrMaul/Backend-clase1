@@ -1,14 +1,9 @@
 import { Router } from 'express';
-import {UsuariosManagerMongo as UsuariosManager} from '../dao/UsuariosManagerMONGO.js'
-import { CartManagerMONGO as CartManager } from '../dao/CartManagerMONGO.js';
 import passport from 'passport';
 import { passportCall } from '../middleware/passportCall.js';
 import { auth } from '../middleware/auth.js';
 export const router=Router()
 
-
-const usuariosManager = new UsuariosManager()
-const cartManager = new CartManager()
 
 router.get('/error', (req,res)=>{
 

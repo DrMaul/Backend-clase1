@@ -1,6 +1,6 @@
 import {productsModelo} from "./models/products.modelo.js"
 
-export class ProductManagerMONGO {
+export class ProductMongoDAO {
 
     async getProducts(){
         return await productsModelo.find().lean()

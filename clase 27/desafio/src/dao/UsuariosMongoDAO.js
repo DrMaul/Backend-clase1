@@ -1,6 +1,6 @@
 import { usuariosModelo } from "./models/usuarios.modelo.js";
 
-export class UsuariosManagerMongo{
+export class UsuariosMongoDAO{
 
     async create(usuario){
         let nuevoUsuario=await usuariosModelo.create(usuario)

@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { ProductManagerMONGO as ProductManager} from '../dao/ProductManagerMONGO.js';
-import { CartManagerMONGO as CartManager} from '../dao/CartManagerMONGO.js';
+import { ProductMongoDAO as ProductManager} from '../dao/ProductMongoDAO.js';
+import { CartMongoDAO as CartManager} from '../dao/CartMongoDAO.js';
 import { auth } from '../middleware/auth.js';
 
 export const router=Router()

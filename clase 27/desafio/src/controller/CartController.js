@@ -1,5 +1,5 @@
-import { CartManagerMONGO as CartDAO} from "../dao/CartManagerMONGO.js"
-import { ProductManagerMONGO as ProductDAO} from "../dao/ProductManagerMONGO.js"
+import { CartMongoDAO as CartDAO} from "../dao/CartMongoDAO.js"
+import { ProductMongoDAO as ProductDAO} from "../dao/ProductMongoDAO.js"
 import { isValidObjectId } from "mongoose";
 
 

@@ -1,5 +1,4 @@
 import __dirname from './utils.js'
-import {mongourl} from './utils.js'
 import path from 'path'
 import {config} from './config/config.js'
 

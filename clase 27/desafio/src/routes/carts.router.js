@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { CartController } from '../controller/CartController.js';
-import { auth } from '../middleware/auth.js';
 
 export const router=Router()
 
@@ -10,7 +9,7 @@ router.post('/',CartController.createCart)
 
 router.get("/:cid", CartController.getCart)
 
-router.post('/:cid/product/:pid', auth, CartController.addProductToCart)
+router.post('/:cid/product/:pid', CartController.addProductToCart)
 
 router.delete("/:cid", CartController.deleteCart)
 
