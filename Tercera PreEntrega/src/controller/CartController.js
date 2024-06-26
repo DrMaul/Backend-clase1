@@ -93,6 +93,7 @@ export class CartController{
         //Valido si existe el producto en la BBDD
         try {
             let product = await productService.getProductBy({_id:pid})
+            console.log("Producto: ",product)
             if(!product){
             res.setHeader('Content-Type','application/json');
             return res.status(400).json({error:`El producto con id: ${pid} no existe`})
@@ -106,9 +107,11 @@ export class CartController{
                 }
             )
         }
+        
     
         try {
-            let cart = await cartService.getCartById(cid)
+            let cart = await cartService.getCartBy({_id:cid})
+            console.log("Carrito antes: ",cart)
       
             if (cart){
                 let productExist = cart.products.find(p => p.product == pid);
@@ -121,6 +124,8 @@ export class CartController{
             else {
             res.setHeader('Content-Type','application/json');
             return res.status(400).json({error:`Carrito con id:${cid} no encontrado`})}
+
+            console.log("Carriton despues: ",cart)
     
             let productoAgregado = await cartService.addProductToCart(cid, cart);
     
@@ -343,32 +348,31 @@ export class CartController{
             let cartProduct = cart.products[i].product
             let quantity = cart.products[i].quantity
             
-            console.log(`Product ID: ${cartProduct._id}, Name: ${cartProduct.title}, Stock: ${cartProduct.stock}`);
-            console.log("Cantidad: ", quantity)
             if (cartProduct.stock >= quantity) {
-                console.log(`El producto ${cartProduct.title} tiene stock.`);
-
                 stockProducts.push({
                     title: cartProduct.title,
                     price: cartProduct.price
                 })
                 
                 let product = await productService.getProductBy({_id: cartProduct._id})
-                console.log("Stock inicial del producto: ", product.stock)
+                if(!product){
+                    res.setHeader('Content-Type','application/json');
+                    return res.status(400).json({error:`Error al obtener el producto con id: ${cartProduct._id} de la BBDD`}) 
+                }
                 product.stock = product.stock - quantity
-                console.log("Stock final del producto: ", product.stock)
+
+                //Actualizar producto con nuevo stock
                 await productService.updateProduct(cartProduct._id, product)
 
                 // Acumular el precio del producto disponible en stock
                 amount += cartProduct.price * quantity;
 
                 // Eliminar producto del carrito
-                cartService.deleteProductInCart(cid, cartProduct._id)
+                await cartService.deleteProductInCart(cid, cartProduct._id)
 
             } else {
                 console.log(`El producto ${cartProduct.title} no tiene stock.`);
-                // cart.products.splice(i, 1); // Elimina el producto del carrito
-                
+
             }
         }
         
@@ -377,12 +381,15 @@ export class CartController{
         if(amount>0){
             
             ticket = await ticketService.createTicket(amount, purchaser)
-            console.log("Ticket code: ",ticket.code)
-            console.log("Productos para enviar x mail: ",stockProducts)
+            if(!ticket){
+                res.setHeader('Content-Type','application/json');
+                return res.status(400).json({error:`Error al crear el ticket`}) 
+            }
+
+            //Funcion para enviar el mail de resumen de compra
             enviarMail(purchaser, ticket.code, amount, ticket.purchase_datetime, stockProducts)
         }
         
-    
         
         res.setHeader('Content-Type','application/json');
         return res.status(200).json({ticket});

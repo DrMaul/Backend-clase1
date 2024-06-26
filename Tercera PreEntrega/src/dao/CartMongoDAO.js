@@ -18,7 +18,7 @@ export class CartMongoDAO {
         return await cartsModelo.create({products:[]})
     }
 
-    async updateCart(cartId, cart) {
+    async addProduct(cartId, cart) {
         return await cartsModelo.updateOne({_id:cartId}, cart)
     }
 

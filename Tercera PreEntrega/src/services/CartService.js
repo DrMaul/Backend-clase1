@@ -9,8 +9,8 @@ class CartService{
         return await this.cartDAO.get()
     }
 
-    async getCartById(id) {
-        return await this.cartDAO.getBy({_id:id})
+    async getCartBy(filtro) {
+        return await this.cartDAO.getBy(filtro)
     }
 
     async getCartByPopulate(id) {
@@ -22,7 +22,7 @@ class CartService{
     }
 
     async addProductToCart(cartId, cart) {
-        return await this.cartDAO.updateCart(cartId, cart)
+        return await this.cartDAO.addProduct(cartId, cart)
     }
 
     async deleteCart(id){
