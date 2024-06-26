@@ -19,3 +19,5 @@ router.delete('/:cid/product/:pid', CartController.deleteProductInCart)
 router.put("/:cid", CartController.updateCart)
 
 router.put("/:cid/product/:pid", CartController.updateProdInCart)
+
+router.get("/:cid/purchase", CartController.createTicket)

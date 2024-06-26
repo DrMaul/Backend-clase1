@@ -1,7 +1,5 @@
 import { CartMongoDAO } from "../dao/CartMongoDAO.js"
 
-
-
 class CartService{
     constructor(dao){
         this.cartDAO = dao
@@ -12,11 +10,11 @@ class CartService{
     }
 
     async getCartById(id) {
-        return await this.cartDAO.getBy(id)
+        return await this.cartDAO.getBy({_id:id})
     }
 
-    async getCartByPopulate(cid) {
-        return await this.cartDAO.getByPopulate({_id:cid}) 
+    async getCartByPopulate(id) {
+        return await this.cartDAO.getByPopulate({_id:id}) 
     }
 
     async createCart() {

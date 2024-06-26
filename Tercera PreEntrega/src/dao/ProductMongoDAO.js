@@ -6,7 +6,7 @@ export class ProductMongoDAO {
         return await productsModelo.find().lean()
     }
     
-    async getBy(filtro={}){
+    async getBy(filtro){
         return await productsModelo.findOne(filtro).lean()
     }
     

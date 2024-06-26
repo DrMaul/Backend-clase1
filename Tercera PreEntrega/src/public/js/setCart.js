@@ -1,6 +1,5 @@
 const addProduct = async (pid) => {
     
-    
     let inputCart = document.getElementById("cart")
     let cid = inputCart.value
 
@@ -23,4 +22,15 @@ const addProduct = async (pid) => {
         
     }
     
+}
+
+const setTicket = async (cid) => {
+    let response = await fetch(`/api/carts/${cid}/purchase`, {method:"get"})
+    if(response.status === 200){
+        setTimeout(() => {
+            window.location.reload()
+        }, 5000);
+        console.log("Compra finalizada")
+    }
+
 }

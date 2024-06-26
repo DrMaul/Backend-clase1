@@ -1,6 +1,8 @@
 import { isValidObjectId } from "mongoose";
 import { cartService } from "../services/CartService.js";
 import { productService } from "../services/ProductService.js";
+import { ticketService } from "../services/TicketService.js";
+import { enviarMail } from "../config/mailing.config.js";
 
 
 export class CartController{
@@ -318,5 +320,71 @@ export class CartController{
         }
         
     
+    }
+
+    static createTicket = async (req,res) => {
+        let {cid} = req.params
+        let purchaser = req.session.usuario.email
+        if(!isValidObjectId(cid)){
+            res.setHeader('Content-Type','application/json');
+            return res.status(400).json({error:`Ingresar ID valido de MongoDB`})
+        }
+
+        let cart = await cartService.getCartByPopulate(cid)
+        if(!cart){
+            res.setHeader('Content-Type','application/json');
+            return res.status(400).json({error:`El carrito con id: ${cid} no existe`}) 
+        }
+
+        
+        let stockProducts = []
+        let amount = 0
+        for (let i = cart.products.length - 1; i >= 0; i--) {
+            let cartProduct = cart.products[i].product
+            let quantity = cart.products[i].quantity
+            
+            console.log(`Product ID: ${cartProduct._id}, Name: ${cartProduct.title}, Stock: ${cartProduct.stock}`);
+            console.log("Cantidad: ", quantity)
+            if (cartProduct.stock >= quantity) {
+                console.log(`El producto ${cartProduct.title} tiene stock.`);
+
+                stockProducts.push({
+                    title: cartProduct.title,
+                    price: cartProduct.price
+                })
+                
+                let product = await productService.getProductBy({_id: cartProduct._id})
+                console.log("Stock inicial del producto: ", product.stock)
+                product.stock = product.stock - quantity
+                console.log("Stock final del producto: ", product.stock)
+                await productService.updateProduct(cartProduct._id, product)
+
+                // Acumular el precio del producto disponible en stock
+                amount += cartProduct.price * quantity;
+
+                // Eliminar producto del carrito
+                cartService.deleteProductInCart(cid, cartProduct._id)
+
+            } else {
+                console.log(`El producto ${cartProduct.title} no tiene stock.`);
+                // cart.products.splice(i, 1); // Elimina el producto del carrito
+                
+            }
+        }
+        
+        //Si el total es > 0, significa que se ha comprado al menos 1 producto que tenga stock
+        let ticket
+        if(amount>0){
+            
+            ticket = await ticketService.createTicket(amount, purchaser)
+            console.log("Ticket code: ",ticket.code)
+            console.log("Productos para enviar x mail: ",stockProducts)
+            enviarMail(purchaser, ticket.code, amount, ticket.purchase_datetime, stockProducts)
+        }
+        
+    
+        
+        res.setHeader('Content-Type','application/json');
+        return res.status(200).json({ticket});
     }
 }
