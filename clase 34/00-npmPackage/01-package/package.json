@@ -1,0 +1,15 @@
+{
+  "name": "saludoscoder20240704",
+  "version": "1.0.0",
+  "description": "probando",
+  "main": "./src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Coder Comis 53140",
+  "license": "MIT",
+  "dependencies": {
+    "colors": "^1.4.0"
+  }
+}
