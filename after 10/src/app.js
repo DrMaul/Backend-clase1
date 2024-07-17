@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import sessions from 'express-session'
 import { initPassport } from './config/passport.config.js';
 import passport from 'passport';
+import { errorHanlder } from './middleware/errorHandler.js';
 
 
 import { router as vistasRouter } from './routes/vistasRouter.js';
@@ -15,6 +16,10 @@ import { router as sessionsRouter } from './routes/sessions.router.js';
 
 
 const PORT = 3000;
+
+process.on("uncaughtException", error=> {
+    console.log("Error no contemplado: ",error.message)
+})
 
 const app = express();
 
@@ -38,6 +43,8 @@ app.use("/", vistasRouter)
 app.use("/api/products", productsRouter)
 app.use("/api/carts", cartsRouter)
 app.use("/api/sessions", sessionsRouter)
+
+app.use(errorHanlder)
 
 
 const server = app.listen(PORT, () => {

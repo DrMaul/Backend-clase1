@@ -14,4 +14,8 @@ export class ProductManager {
         let nuevoProducto = await productosModelo.create(producto)
         return nuevoProducto.toJSON()
     }
+
+    async update(id, producto){
+        return await productosModelo.updateOne({_id:id}, producto)
+    }
 }

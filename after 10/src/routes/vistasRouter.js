@@ -13,7 +13,7 @@ router.get("/carrito/:cid", async (req, res)=> {
     let carrito = await cartsManager.getOneByPopulate({_id:cid})
 
     res.setHeader('Content-Type','text/html');
-    return res.status(200).render("carrito", {carrito});
+    return res.status(200).render("carrito", {carrito, cid});
 })
 
 router.get('/productos',auth,async (req,res)=>{
