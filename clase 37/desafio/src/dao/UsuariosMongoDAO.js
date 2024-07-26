@@ -16,7 +16,12 @@ export class UsuariosMongoDAO{
     }
 
     async updatePassword(id, newPassword){
-        return await cartsModelo.findByIdAndUpdate({_id: id}, {$set: {password: newPassword}}, {runValidators: true, returnDocument: "after"})
+        return await usuariosModelo.findByIdAndUpdate({_id: id}, {$set: {password: newPassword}}, {runValidators: true, returnDocument: "after"})
+        
+    }
+
+    async updateRol(id, newRol){
+        return await usuariosModelo.findByIdAndUpdate({_id: id}, {$set: {rol: newRol}}, {runValidators: true, returnDocument: "after"})
         
     }
 

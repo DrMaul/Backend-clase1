@@ -10,6 +10,19 @@ import { config } from '../config/config.js';
 let JwtSecret = config.SECRET
 
 export class PasswordController{
+    static resetForm = async (req,res, next)=> {
+        try {
+            res.render("resetPassword")
+        } catch (error) {
+            req.logger.fatal(JSON.stringify({
+                name:error.name, 
+                message:error.message,
+                stack:error.stack
+            }, null, 5))
+            next(error)
+        }
+    }
+
     static sendMail = async (req,res, next)=> {
         try {
             try {
@@ -46,9 +59,9 @@ export class PasswordController{
             let token = req.params.token
             jwt.verify(token, JwtSecret, (err,decoded)=> {
                 if(err){
-                    return res.redirect("/reset-passwor")
+                    return res.redirect("/resetPassword")
                 }
-                res.render("resetPassword", {token})
+                res.render("resetPasswordForm", {token})
             })
             
     
