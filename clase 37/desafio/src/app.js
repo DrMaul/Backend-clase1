@@ -17,6 +17,10 @@ import {router as vistasRouter} from './routes/vistas.router.js'
 import { router as sessionsRouter } from './routes/sessions.router.js';
 import { router as mockingRouter} from './routes/mocking.router.js';
 import { router as loggerRouter} from './routes/logger.router.js';
+import { router as usuariosRouter} from './routes/usuarios.router.js';
+import { router as passwordRouter} from './routes/password.router.js';
+
+
 
 import {Server} from 'socket.io'
 import {messagesModelo} from './dao/models/messages.modelo.js'
@@ -61,6 +65,8 @@ app.use("/", vistasRouter)
 app.use("/api/sessions", sessionsRouter)
 app.use("/mockingproducts", mockingRouter)
 app.use("/loggerTest", loggerRouter)
+app.use("/api/users", usuariosRouter)
+app.use("/", passwordRouter)
 
 
 let usuarios = []
