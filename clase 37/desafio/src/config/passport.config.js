@@ -58,6 +58,10 @@ export const initPassport = () => {
                 try {
                     let {nombre} = req.body
 
+                    console.log("nombre: ",nombre)
+                    console.log("email: ",username)
+                    console.log("password: ",password)
+
                     let nombreRegex = /^[a-zA-Z\s\-']+$/
                     let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
                     //let passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
@@ -83,7 +87,7 @@ export const initPassport = () => {
                         return done(null, false);
                     } */
 
-                    let nuevoCarrito = await cartManager.createCart()
+                    let nuevoCarrito = await cartManager.create()
                     password = generaHash(password)
 
                     let usuario = await usuariosManager.create({nombre, email:username, password, cart:nuevoCarrito._id})

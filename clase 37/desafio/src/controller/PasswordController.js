@@ -4,8 +4,10 @@ import { generaHash, validaPassword } from '../utils.js'
 import { mailResetPassword } from '../config/mailing.config.js'
 import { CustomError } from "../utils/CustomError.js";
 import { TIPOS_ERROR } from "../utils/EErrors.js";
-import { UsuariosMongoDAO as UsuariosDAO } from '../dao/UsuariosMongoDAO.js';
+import { UsuariosMongoDAO as UsuariosManager } from '../dao/UsuariosMongoDAO.js';
 import { config } from '../config/config.js';
+
+const usuariosManager = new UsuariosManager()
 
 let JwtSecret = config.SECRET
 
@@ -24,19 +26,17 @@ export class PasswordController{
     }
 
     static sendMail = async (req,res, next)=> {
+
         try {
             try {
             let email = req.body.email
-            let user = await UsuariosDAO.getBy({email:email})
+            let user = await usuariosManager.getBy({email:email})
             if(!user){
                 return CustomError.createError("Error", null,`No se encontraron usuarios asociados al mail ${email} `,TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
             }
             
             let token = jwt.sign({email:user.email},JwtSecret,{expiresIn: "1h"})
-
             mailResetPassword(token, user)
-
-        
             res.setHeader('Content-type', 'application/json')
             res.status(200).json({payload: `Email para reestablecer password enviado a ${user.email}`})
     
@@ -54,6 +54,7 @@ export class PasswordController{
     }
 
     static sendResetPassword = async (req,res, next)=> {
+        
         try {
             try {
             let token = req.params.token
@@ -79,6 +80,7 @@ export class PasswordController{
     }
 
     static resetPassword = async (req,res, next)=> {
+        
         try {
             try {
             let token = req.params.token
@@ -86,7 +88,7 @@ export class PasswordController{
 
 
             let decoded = jwt.verify(token, JwtSecret)
-            let user = await UsuariosDAO.getBy({email:email})
+            let user = await usuariosManager.getBy({email:decoded.email})
 
             if(!user){
                 return CustomError.createError("Error", null,`No se encontraron usuarios asociados al mail ${email} `,TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
@@ -96,13 +98,13 @@ export class PasswordController{
                 return CustomError.createError("Error", null,`Error al obtener las contraseñas.`,TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
             }
 
-            let mismaPassword = validaPassword(password, user)
+            let mismaPassword = validaPassword(password, user.password)
             if(mismaPassword){
                 return CustomError.createError("Error", null,`Error: La nueva contraseña debe ser diferente a la actual.`,TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
             }
             
             let newPassword = generaHash(password)
-            await UsuariosDAO.updatePassword(user._id, newPassword)
+            await usuariosManager.updatePassword(user._id, newPassword)
 
             res.setHeader('Content-type', 'application/json')
             res.status(200).json({payload: `Contraseña reestablecida correctamente`})

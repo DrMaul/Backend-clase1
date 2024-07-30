@@ -57,7 +57,7 @@ export const mailResetPassword = async (token,user)=>{
             <h1>Reestablecer Contraseña</h1><br>
             <p>Se ha generado una solicitud para reestablecer su contraseña. Por favor, haga click en el enlace
             para continuar al formulario de recuperación de contraseñas.</p><br>
-            <h4>http://localhost:8080/reset/${token}</h4>
+            <h4>http://localhost:8080/resetPassword/${token}</h4>
         `
     };
 
