@@ -14,7 +14,7 @@ router.get('/', async (req,res)=> {
     res.status(200).render('home',{login: req.session.usuario})
 })
 
-router.get("/carts/:cid",auth(["admin", "user"]), async (req, res)=> {
+router.get("/carts/:cid",auth(["admin", "user","premium"]), async (req, res)=> {
     let {cid} = req.params
 
 
@@ -45,7 +45,7 @@ router.get('/realtimeproducts', async (req,res)=> {
     res.status(200).render('realTimeProducts', {products})
 })
 
-router.get('/products', auth(["admin", "user"]),async (req,res)=> {
+router.get('/products', auth(["admin", "user","premium"]),async (req,res)=> {
 
     let cart= {
         _id: req.session.usuario.cart._id
@@ -130,7 +130,7 @@ router.get('/products', auth(["admin", "user"]),async (req,res)=> {
     })
 })
 
-router.get('/chat',auth(["user"]), (req, res)=> {
+router.get('/chat',auth(["user","premium"]), (req, res)=> {
     res.status(200).render('chat')
 })
 
@@ -157,7 +157,7 @@ router.get('/login',auth(["public"]),(req,res,next)=>{
     res.status(200).render('login', {error, mensaje, login: req.session.usuario})
 })
 
-router.get('/perfil',auth(["admin", "user"]),(req,res)=>{
+router.get('/perfil',auth(["admin", "user","premium"]),(req,res)=>{
 
     res.status(200).render('perfil',{
         usuario:req.session.usuario, login: req.session.usuario

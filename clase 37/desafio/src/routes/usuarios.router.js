@@ -7,3 +7,5 @@ export const router=Router()
 
 router.get("/premium/:id", auth(["admin","user","premium"]),UserController.cambiarRol)
 
+router.get("/rol/:id", auth(["admin","user","premium"]),UserController.getRol)
+

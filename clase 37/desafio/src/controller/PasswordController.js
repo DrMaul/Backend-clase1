@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken'
-import { usuariosModelo } from '../dao/models/usuarios.modelo.js'
 import { generaHash, validaPassword } from '../utils.js'
 import { mailResetPassword } from '../config/mailing.config.js'
 import { CustomError } from "../utils/CustomError.js";

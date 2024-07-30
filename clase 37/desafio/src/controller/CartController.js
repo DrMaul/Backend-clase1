@@ -86,10 +86,19 @@ export class CartController{
             if(!isValidObjectId(cid) || !isValidObjectId(pid)){
                 return CustomError.createError("Error ID", null,"Ingresar ID valido de MongoDB",TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
             }
+
+            let ownerId =req.session.usuario._id
+            let ownerRol =req.session.usuario.rol
             try {
                 let product = await productService.getProductBy({_id:pid})
-                if(!product){
-                return CustomError.createError("Error Not Found", null,`El producto con id: ${pid} no existe`,TIPOS_ERROR.NOT_FOUND)
+                if(product){
+                    let idProductOwner = product.owner
+                    if(idProductOwner === ownerId && ownerRol === "premium"){
+                        return CustomError.createError("Error ID", null,"Un usuario premium no puede agregar al carrito su propio producto",TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
+
+                    }
+                    else {return CustomError.createError("Error Not Found", null,`El producto con id: ${pid} no existe`,TIPOS_ERROR.NOT_FOUND)
+                    }
                 }
             } catch (error) {
                 return CustomError.createError("Error", null,"Internal server Error",TIPOS_ERROR.INTERNAL_SERVER_ERROR)

@@ -53,6 +53,14 @@ export class ProductController{
     static createProduct = async (req,res,next)=>{
         try {
             let {title, description, code, price, status, stock, category, thumbnail} = req.body
+
+            let owner = "admin"
+            if(req.session.usuario.rol === "premium"){
+                 owner = req.session.usuario._id
+                
+            }
+
+            // console.log("Owner: ",owner)
         
             //Se validan que todos los campos sean obligatorios
             if(!title || !description || !code || !price || !stock || !category){
@@ -85,7 +93,7 @@ export class ProductController{
             
             let nuevoProducto
             try {
-                nuevoProducto = await productService.addProduct({title, description, code, price, status, stock, category, thumbnail}) 
+                nuevoProducto = await productService.addProduct({title, description, code, price, status, stock, category, thumbnail, owner}) 
                 
             } catch (error) {
                 return CustomError.createError("Error", null,"Internal server Error",TIPOS_ERROR.INTERNAL_SERVER_ERROR)
@@ -156,12 +164,30 @@ export class ProductController{
             if(!isValidObjectId(id)){
                 return CustomError.createError("Error ID", null,"Ingresar ID valido de MongoDB",TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
             }
-        
+
+            let ownerId =req.session.usuario._id
+            let ownerRol =req.session.usuario.rol
+            let producto
             let productoEliminado
             let productos
             try{
                 productos = await productService.getProducts()
-                productoEliminado = await productService.deleteProduct(id)
+
+                producto = await productService.getProductBy({_id:id})
+                if(producto){
+                    let idProductOwner = producto.owner
+                    if(idProductOwner === ownerId && ownerRol === "premium"){
+                        productoEliminado = await productService.deleteProduct(id)
+
+                    }
+                    if(ownerRol === "admin"){
+                        productoEliminado = await productService.deleteProduct(id)
+                    }
+
+
+                }
+
+                
                 if(productoEliminado.deletedCount > 0){
                     res.setHeader('Content-Type','application/json');
                     return res.status(200).json({payload:`Producto con id: ${id} eliminado`});

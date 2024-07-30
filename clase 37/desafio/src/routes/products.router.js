@@ -8,9 +8,9 @@ router.get("/", ProductController.getProducts)
 
 router.get("/:pid", ProductController.getProduct )
 
-router.post('/',auth(["admin"]),ProductController.createProduct)
+router.post('/',auth(["admin","premium"]),ProductController.createProduct)
 
-router.put("/:pid", auth(["admin"]),ProductController.updateProduct)
+router.put("/:pid", auth(["admin","premium"]),ProductController.updateProduct)
 
-router.delete("/:pid",auth(["admin"]), ProductController.deleteProduct)
+router.delete("/:pid",auth(["admin","premium"]), ProductController.deleteProduct)
 
