@@ -6,14 +6,68 @@ paths:
         - Users
       description: Optional extended description in CommonMark or HTML.
       responses:
-        '200':    # status code
-          description: A JSON array of user names
+        # '200':    # status code
+          # description: A JSON array of user names
           # content:
           #   application/json:
           #     schema: 
           #       type: array
           #       items: 
           #         type: string
+          #         example: "Juan"
+        # '200':    # status code
+        #   description: A JSON array of user names
+        #   content:
+        #     application/json:
+        #       schema: 
+        #         type: array
+        #         items: 
+        #           type: object
+        #           properties:
+        #             nombre:
+        #               type: string
+        #               example: "Juan"
+        #             email:
+        #               type: string
+        #               example: "juan@mail.com"
+        # '200':    # status code
+        #   description: A JSON array of user names
+        #   content:
+        #     application/json:
+        #       schema: 
+        #         type: object
+        #         properties:
+        #           message:
+        #             type: string
+        #             example: "Lista de usuarios"
+        #           usuarios:
+        #             type: array
+        #             items: 
+        #               type: object
+        #               properties:
+        #                 id:
+        #                   type: ObjectId
+        #                   example: "60acc54545c8e82e0475f73a"
+        #                 nombre:
+        #                   type: string
+        #                   example: "Juan"
+        #                 email:
+        #                   type: string
+        #                   example: "juan@mail.com"
+        '200':    # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Lista de usuarios"
+                  usuarios:
+                    type: array
+                    items: 
+                      $ref: "#components/schemas/User"
         '404':    # status code
           description: Error
           # content:
@@ -44,3 +98,24 @@ paths:
           #       type: array
           #       items: 
           #         type: string
+requestBodies:
+    createUser:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: Nombre de usurio
+        last_name:
+          type: string
+          description: Apellido
+        email:
+          type: string
+          description: Correo del usuario
+        password:
+          type: string
+          description: Contraseña del usuario
+      example:
+        first_name: Diego
+        last_name: Polverelli
+        email: diego@hotmail.com
+        password: coder123     

@@ -1,0 +1,12 @@
+paths:
+  /api/products:
+    get:
+      summary: Listado de productos
+      tags:
+        - Products
+      description: Descripcion
+    post:
+      summary: Listado de productos
+      tags:
+        - Products
+      description: Descripcion
