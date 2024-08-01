@@ -25,4 +25,8 @@ export class UsuariosMongoDAO{
         
     }
 
+    async get(){
+        return await usuariosModelo.find().lean()
+    }
+
 }

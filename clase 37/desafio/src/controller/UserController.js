@@ -65,4 +65,24 @@ export class UserController {
             next(error)
         }
     }
+
+    static getUsuarios = async (req,res, next)=> {
+        let usuarios = await usuariosManager.get()
+
+        
+        if(!usuarios){
+            return CustomError.createError("Error", null,`Error al obtener usuarios`,TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
+        }
+
+        let usuariosFiltrados = usuarios.map(usuario => ({
+            _id: usuario._id,
+            nombre: usuario.nombre,
+            email: usuario.email,
+            rol: usuario.rol
+        }));
+
+
+        res.setHeader('Content-type', 'application/json')
+        res.status(200).json({usuariosFiltrados})
+    }
 }

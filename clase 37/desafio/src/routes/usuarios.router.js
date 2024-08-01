@@ -9,3 +9,5 @@ router.get("/premium/:id", auth(["admin","user","premium"]),UserController.cambi
 
 router.get("/rol/:id", auth(["admin","user","premium"]),UserController.getRol)
 
+router.get("/getUsuarios",UserController.getUsuarios)
+
