@@ -38,7 +38,7 @@ export class ProductController{
             try {
                 let product = await productService.getProductBy({_id:id})
                 if (!product){
-                    res.json({error: `No existe el producto con ID:${id}`})
+                    return CustomError.createError("Error Not Found", null,`No existe el producto con id: ${id}`,TIPOS_ERROR.NOT_FOUND)
                 }
                 res.setHeader('Content-type', 'application/json')
                 return res.status(200).json(product)
