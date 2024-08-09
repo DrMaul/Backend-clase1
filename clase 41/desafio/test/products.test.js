@@ -33,51 +33,56 @@ describe("Prueba proyecto - Products", function(){
     it("La ruta /api/products/:pid en su metodo get, retorna el producto buscado", async ()=>{
         let productTest = await requester.post("/api/products").send(mockProduct)
         let pid = productTest.body.product._id
-        console.log(pid)
-
-        let product = await mongoose.connection.collection("products").findOne({_id:pid})
-        console.log(product)
-        expect(isValidObjectId(producto._id)).to.be.true
-        expect(product._id).to.be.ok
+        expect(pid).to.exist
 
         let res = await requester.get(`/api/products/${pid}`)
         expect(res.statusCode).to.exist.and.to.be.equal(200)
 
         let {body} = res
-        expect(body.status).to.exist.and.to.be.equal("success")
+        expect(body).to.exist
+        expect(isValidObjectId(body.product._id)).to.be.true
+        expect(body.product._id).to.be.ok
 
     })
 
     it("La ruta /api/products en su metodo post, crea un nuevo producto", async ()=>{
         
-        let {body} = await requester.post("/api/products").send(mockProduct)
+        let res = await requester.post("/api/products").send(mockProduct)
+        expect(res.statusCode).to.exist.and.to.be.equal(201)
 
-        expect(body.status).to.exist.and.to.be("success")
-        expect(body.payload).to.be.true
+        let {body} = res
+        expect(body).to.exist
         expect(isValidObjectId(body.product._id)).to.be.true
+        expect(body.product._id).to.be.ok
     })
 
     it("La ruta /api/products/:pid en su metodo delete, elimina un producto", async ()=>{
  
-        let {body} = await requester.post("/api/products").send(mockProduct)
+        let resCreateProd = await requester.post("/api/products").send(mockProduct)
+        expect(resCreateProd.statusCode).to.exist.and.to.be.equal(201)
 
-        expect(body.status).to.exist.and.to.be("success")
-        expect(body.payload).to.be.true
-        expect(isValidObjectId(body.payload)).to.be.true
+        let {body} = resCreateProd
+        expect(body).to.exist
+        expect(isValidObjectId(body.product._id)).to.be.true
 
         let pid = body.product._id
-        let producto = await mongoose.connection.collection("products").findOne({_id:pid})
-        expect(isValidObjectId(producto._id)).to.be.true
-        expect(producto._id).to.be.ok
+        expect(pid).to.exist
 
-        let res = await requester.delete(`/api/products/${pid}`)
-        expect(res.statusCode).to.exist.and.to.be.equal(200)
+        let resGetProd = await requester.get(`/api/products/${pid}`)
+        expect(resGetProd.statusCode).to.exist.and.to.be.equal(200)
 
-        
+        body = resGetProd.body
+
+        expect(body).to.exist
+        expect(isValidObjectId(body.product._id)).to.be.true
+        expect(body.product._id).to.be.ok
+
+        let resDelProd = await requester.delete(`/api/products/${pid}`)
+        expect(resDelProd.statusCode).to.exist.and.to.be.equal(200)
+
+        body = resDelProd.body
+        expect(body.payload).to.exist
 
     })
-
-
-
 
 })

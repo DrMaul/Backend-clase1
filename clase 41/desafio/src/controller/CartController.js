@@ -35,9 +35,9 @@ export class CartController{
     static createCart = async (req,res, next)=>{
         try {
             try {
-            let nuevoCarrito = await cartService.createCart() 
+            let cart = await cartService.createCart() 
             res.setHeader('Content-type', 'application/json')
-            return res.status(201).json({nuevoCarrito})
+            return res.status(201).json({cart})
             
         } catch (error) {
             return CustomError.createError("Error", null,"Internal server Error",TIPOS_ERROR.INTERNAL_SERVER_ERROR)
@@ -65,7 +65,7 @@ export class CartController{
                     return CustomError.createError("Error Not Found", null,`No existe el carrito con ID:${id}`,TIPOS_ERROR.NOT_FOUND)
                 }
                 res.setHeader('Content-type', 'application/json')
-                return res.status(200).json(cart)
+                return res.status(200).json({cart})
                 
             } catch (error) {
                 return CustomError.createError("Error", null,"Internal server Error",TIPOS_ERROR.INTERNAL_SERVER_ERROR)

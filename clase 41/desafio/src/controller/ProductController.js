@@ -41,7 +41,7 @@ export class ProductController{
                     return CustomError.createError("Error Not Found", null,`No existe el producto con id: ${id}`,TIPOS_ERROR.NOT_FOUND)
                 }
                 res.setHeader('Content-type', 'application/json')
-                return res.status(200).json(product)
+                return res.status(200).json({product})
             } catch (error) {
                 return CustomError.createError("Error", null,"Internal server Error",TIPOS_ERROR.INTERNAL_SERVER_ERROR)
             }
@@ -91,9 +91,9 @@ export class ProductController{
                 return CustomError.createError("Error argumentos invalidos", null,`El producto ${title} con código: ${code} ya existe`,TIPOS_ERROR.ARGUMENTOS_INVALIDOS)
             }
             
-            let nuevoProducto
+            let product
             try {
-                nuevoProducto = await productService.addProduct({title, description, code, price, status, stock, category, thumbnail, owner}) 
+                product = await productService.addProduct({title, description, code, price, status, stock, category, thumbnail, owner}) 
                 
             } catch (error) {
                 return CustomError.createError("Error", null,"Internal server Error",TIPOS_ERROR.INTERNAL_SERVER_ERROR)
@@ -101,7 +101,7 @@ export class ProductController{
         
             req.io.emit("nuevoProducto", title)
             res.setHeader('Content-type', 'application/json')
-            return res.status(201).json(nuevoProducto)
+            return res.status(201).json({product})
         } catch (error) {
             req.logger.fatal(JSON.stringify({
                 name:error.name, 
