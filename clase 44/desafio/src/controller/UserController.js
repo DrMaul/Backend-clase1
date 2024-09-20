@@ -119,6 +119,6 @@ export class UserController {
 
         await usuariosManager.updateDocuments(user._id, documentos) 
         res.setHeader('Content-type', 'application/json')
-        res.status(200).json({payload: `El usuario ${user.nombre} actualiza sus documents`})
+        res.status(200).json({payload: `El usuario ${user.nombre} actualiza sus documents`, documents:user.documents})
     }
 }
